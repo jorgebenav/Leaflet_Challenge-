@@ -4,13 +4,13 @@ let usgs = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.g
 // Array of colors for different depth levels
 let depthColor = ['lightgreen', 'green', 'yellow', 'orange', 'red'];
 
-// Depth levels corresponding to the colors
+// Depth color levels 
 let depthLevel = [15, 30, 45, 60];
 
-// Create a Leaflet map centered at coordinates [0, 0] with a zoom level of 2
+// Create a Leaflet map centered at coordinates 
 let map = L.map('map', {
-    center: [0, 0],
-    zoom: 2,
+    center: [39, 98],
+    zoom: 3,
     layers: [
         // Add OpenStreetMap tile layer to the map
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -19,7 +19,7 @@ let map = L.map('map', {
     ]
 });
 
-// Fetch earthquake data from the USGS API
+
 d3.json(usgs).then(function(earthquakeUSGS) {
     // Function to determine the color of the marker based on depth
     function colorEarthquake(depth) {
@@ -30,7 +30,7 @@ d3.json(usgs).then(function(earthquakeUSGS) {
         return 'lightgreen';
     }
 
-    // Function to style the markers based on earthquake properties
+
     function styleMarker(feature) {
         return {
             radius: feature.properties.mag * 4, 
@@ -42,20 +42,20 @@ d3.json(usgs).then(function(earthquakeUSGS) {
         };
     }
 
-    // Function to format the timestamp into a readable date and time
+    // timestamp 
     function formatTime(timestamp) {
         const date = new Date(timestamp);
         return date.toLocaleString();
     }
 
-    // Function to generate popup content for each marker
+    // popup content
     function contentInfo(feature) {
         const place = feature.properties.place; // Directly use the raw place data
         const time = formatTime(feature.properties.time);
         return `<b>Location:</b> ${place}<br><b>Magnitude:</b> ${feature.properties.mag}<br><b>Depth:</b> ${feature.geometry.coordinates[2]} km<br><b>Time:</b> ${time}`;
     }
 
-    // Add GeoJSON layer to the map with custom point styling and popups
+    // Add GeoJSON layer 
     L.geoJson(earthquakeUSGS, {
         pointToLayer: function (feature, latlng) {
             return L.circleMarker(latlng, styleMarker(feature));
